@@ -3,8 +3,7 @@ name: Check Latest Commit
 on:
   pull_request:
     types:
-      - synchronize
-
+      - opened
 jobs:
   check_latest_commit:
     runs-on: ubuntu-latest
