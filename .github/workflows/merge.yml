@@ -1,0 +1,36 @@
+name: Check Latest Commit
+
+on:
+  pull_request:
+    types:
+      - synchronize
+
+jobs:
+  check_latest_commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Fetch latest commit from specific branch
+        run: |
+          # Set the specific branch name to check against
+          specific_branch="main"
+
+          # Fetch the latest commit from the specific branch
+          git fetch origin "$specific_branch"
+
+      - name: Compare commits
+        run: |
+          # Get the latest commit hashes for both branches
+          specific_commit=$(git rev-parse "origin/$specific_branch")
+          current_commit=$(git rev-parse HEAD)
+
+          # Compare the commit hashes
+          if [ "$specific_commit" == "$current_commit" ]; then
+            echo "Latest commit from $specific_branch is already in the current branch."
+          else
+            echo "Latest commit from $specific_branch is NOT in the current branch."
+            exit 1
+          fi
